@@ -1,4 +1,4 @@
-
+#include <EasyButton.h>
 #include <Adafruit_NeoPixel.h>
 
 Adafruit_NeoPixel linea(8, 10, NEO_GRB + NEO_KHZ800);
@@ -11,13 +11,17 @@ Adafruit_NeoPixel n6(28, 7, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel n7(28, 8, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel n8(28, 9, NEO_GRB + NEO_KHZ800);
 
+EasyButton botonreset(11);
+EasyButton boton01(12);
+EasyButton boton02(13);
+
 long previousMillis = 0;        
 long intervalOn = 1000;          
 long intervalOff = 1000; 
 
-int pingo = 11;
-int pinreset = 12;
-int botonr =  0;
+int delay_res = 2000;
+int G1 = 0;
+int G2 = 0;
 
 int minutos = 15;
 int segundos = 0;
@@ -1145,11 +1149,30 @@ void fn6(int num)
    n5.show();
   }
  }
- 
- 
+ void resetfn()
+{
+ minutos = 15;
+ segundos = 0;
+ delay(2000);
+}
+void gol_1()
+{
+ G1++;
+}
+void gol_2()
+{
+ G2++;
+}
+void res_1()
+{
+ G1--;
+}
+void res_2()
+{
+ G2--;
+}
 void setup() {
  
-Serial.begin(9600);
   linea.begin();
   linea.show();
   n1.begin();
@@ -1168,8 +1191,9 @@ Serial.begin(9600);
   n7.show();
   n8.begin();
   n8.show();
-  pinMode(pingo, INPUT);
-  pinMode(pinreset, INPUT);
+  botonreset.begin();
+  boton01.begin();
+  boton02.begin();
 }
 
 void loop() {
@@ -1201,14 +1225,25 @@ void loop() {
   fn6(unidadm);
   fn5(decenam);
 
-  botonr = digitalRead(pinreset);
-
-  if (botonr == LOW) 
-  {
-   minutos = 15;
-   segundos = 0;
-   delay(2000);
-  }
+  botonreset.read();
+  boton01.read();
+  boton02.read();
+  
+  botonreset.onPressed(resetfn);
+  boton01.onPressed(gol_1);
+  boton02.onPressed(gol_2);
+  boton01.onPressedFor(delay_res, res_1);
+  boton02.onPressedFor(delay_res, res_2);
+  
+  int decenaG1 = (G1/10);
+  int unidadG1 = (G1 - decenaG1*10);
+  int decenaG2 = (G2/10);
+  int unidadG2 = (G2 - decenaG2*10);
+  fn4(unidadG2);
+  fn3(decenaG2);
+  fn2(unidadG1);
+  fn1(decenaG1);
+  
   linea.setBrightness(100);
   
   for(int r1 = 0; r1 < 8; r1++)
@@ -1217,6 +1252,5 @@ void loop() {
   linea.show();
  }
 }
-  
-  
+
  
