@@ -19,7 +19,7 @@ int pingo = 11;
 int pinreset = 12;
 int botonr =  0;
 
-int minutos = 20;
+int minutos = 15;
 int segundos = 0;
 
 void fn1(int num)
@@ -1205,7 +1205,7 @@ void loop() {
 
   if (botonr == LOW) 
   {
-   minutos = 20;
+   minutos = 15;
    segundos = 0;
    delay(2000);
   }
